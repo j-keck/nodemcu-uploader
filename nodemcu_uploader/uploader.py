@@ -74,7 +74,9 @@ class Uploader(object):
                 time.sleep(self.autobaud_time) # Wait for autobaud timer to expire
                 self.__exchange(';') # Get a defined state
                 self.__writeln('print("%sync%");')
-                self.__expect('%sync%\r\n> ')
+                # FIXME
+                #self.__expect('%sync%\r\n> ')
+                self.__expect()
             except CommunicationTimeout:
                 raise DeviceNotFoundException('Device not found or wrong port')
 
@@ -213,6 +215,9 @@ class Uploader(object):
             if ('unexpected' in resp) or ('stdin' in resp) or len(resp) > len(functions)+10:
                 log.error('error when preparing "%s"', resp)
                 return False
+
+            # delay
+            time.sleep(0.1)
         return True
 
     def download_file(self, filename):
